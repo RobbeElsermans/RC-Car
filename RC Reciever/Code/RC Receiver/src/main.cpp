@@ -4,6 +4,7 @@
 #include "main.h"
 #include "motorDriver.h"
 #include "Servo.h"
+#include "EasyBuzzer.h"
 
 Servo steer;
 
@@ -12,10 +13,21 @@ dataSend_t dataIn;
 
 motorDriver motor(EN, L_PWM, R_PWM);
 
+int errorCounter = 0;
+
 void pinSetup();
 
 void setup()
 {
+
+  dataIn = {
+      1500,
+      1500,
+      0,
+      0,
+      0,
+      0};
+
   steer.attach(STEER);
   steer.writeMicroseconds(1500);
   motor.disable();
@@ -27,7 +39,34 @@ void setup()
 void loop()
 {
   delay(1);
+  dataIn.AUX4 = 0;
   readRadio(&dataIn);
+  Serial.println(errorCounter);
+  if (dataIn.AUX4 == 0)
+  {
+    errorCounter++;
+  }
+  else if (dataIn.AUX4 == 1)
+  {
+    errorCounter = 0;
+  }
+
+  if (errorCounter >= 300)
+  {
+    motor.stop();
+    steer.detach();
+    while (1)
+    {
+      delay(1000);
+      digitalWrite(LED1, HIGH);
+      delay(1000);
+      digitalWrite(LED1, LOW);
+      delay(1000);
+      digitalWrite(LED2, HIGH);
+      delay(1000);
+      digitalWrite(LED2, LOW);
+    }
+  }
 
   Serial.println(dataIn.throttle);
 

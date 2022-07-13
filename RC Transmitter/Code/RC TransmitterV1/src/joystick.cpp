@@ -13,7 +13,7 @@ void initJoy()
 int readValX()
 {
     int temp = readRawValX();
-    return map(temp, 0, 1024, yawMinOffset-yawCenterOffset, yawMaxOffset-yawCenterOffset) + yawCenterOffset;
+    return map(temp, 0, 1024, yawMinOffset, yawMaxOffset) + yawCenterOffset;
 }
 int readValY()
 {

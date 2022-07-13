@@ -5,8 +5,8 @@ int throttleCenterOffset = 0;
 int throttleMinOffset = 1000;
 int throttleMaxOffset = 2000;
 
-int yawCenterOffset = 4;
-int yawMinOffset = 1000;
-int yawMaxOffset = 2002;
+int yawCenterOffset = -50;
+int yawMinOffset = 1200;
+int yawMaxOffset = 1800;
 
 #endif

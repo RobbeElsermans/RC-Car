@@ -33,7 +33,26 @@
 void pinSetup();
 void send();
 void collectData();
-int getThrottleJoy();
+
+void displaySignal();
+void displayBatteryVoltage();
+void displayMenu();
+void displayCursor();
+void checkCursorState();
+
+uint8_t displaysCursorState = 0;
+
+typedef enum
+{
+  MAIN,
+  CORRECTIONS,
+  DEBUG,
+} displayMenuState;
+
+displayMenuState displayState = MAIN;
+
+#define MAX_MAIN_OBJECTS 3
+buttonState prevButtonstate = NONEBUTTON;
 
 // U8G2_SH1106_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
 U8X8_SH1106_128X64_NONAME_SW_I2C u8x8(SCL, SDA);
@@ -76,6 +95,12 @@ void setup()
       0};
 
   displayTime = millis();
+
+  displaySignal();
+  displayBatteryVoltage();
+  displayMenu();
+  displayCursor();
+  checkCursorState();
 }
 
 void loop()
@@ -88,36 +113,16 @@ void loop()
 
   delay(1);
 
-  if (millis() - displayTime > 500 && counterTotal == 100)
+  if (millis() - displayTime > 200 && counterTotal == 100)
   {
-    // u8g2.clearBuffer();                                // clear the internal memory open_iconic_embedded_1x
-    // u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t); // choose a suitable font
-    // u8g2.setCursor(0, 8);
-    // u8g2.write(80);                     // write something to the internal memory
-    // u8g2.setFont(u8g2_font_courB08_tf); // choose a suitable font
-    // u8g2.setCursor(10, 8);
-    // u8g2.print(counter);
-    // u8g2.setCursor(0, 16);
-    // u8g2.print(getThrottle());
-    // u8g2.sendBuffer(); // transfer internal memory to the display
-
-    // u8x8.clearLine(0);                                // clear line x
-    u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
-    u8x8.drawGlyph(0, 0, 80);                         // Draw glyph
-    u8x8.drawGlyph(11, 0, 73);
-    u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
-    u8x8.drawString(3, 0, " ");
-    u8x8.setCursor(1, 0);
-    u8x8.print(counter);
-    u8x8.drawString(4, 0, "%");
-
-    u8x8.setCursor(12, 0);
-    u8x8.print(getBatteryVal());
-
-    u8x8.setCursor(0, 1);
-    u8x8.print(dataOut.yaw);
-  
+    displaySignal();
+    displayBatteryVoltage();
+    displayMenu();
+    displayCursor();
+    checkCursorState();
     displayTime = millis();
+
+    Serial.println(displayState);
   }
 
   if (counterTotal == 100)
@@ -129,6 +134,7 @@ void loop()
 
 void send()
 {
+  dataOut.AUX4 = 1;
   bool stat = writeRadio(dataOut);
   if (stat)
   {
@@ -163,4 +169,177 @@ void pinSetup()
   pinMode(OLED_RESET, INPUT);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
+}
+
+void displaySignal()
+{
+  u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
+  u8x8.drawGlyph(0, 0, 80);                         // Draw glyph
+
+  u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
+  u8x8.drawString(3, 0, " ");
+  u8x8.setCursor(1, 0);
+  u8x8.print(counter);
+  u8x8.drawString(4, 0, "%");
+}
+void displayBatteryVoltage()
+{
+  u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
+  u8x8.drawGlyph(11, 0, 73);                        // Draw glyph
+
+  u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
+  u8x8.setCursor(12, 0);
+  u8x8.print(getBatteryVal());
+}
+
+void displayMenu()
+{
+  switch (displayState)
+  {
+  case MAIN:
+    u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
+    u8x8.drawGlyph(2, 1, 68);                         // Draw glyph
+    u8x8.drawGlyph(2, 2, 66);                         // Draw glyph
+    u8x8.drawGlyph(2, 3, 72);                         // Draw glyph
+    break;
+  case CORRECTIONS:
+
+    break;
+  case DEBUG:
+    u8x8.setFont(u8x8_font_open_iconic_arrow_1x1); // choose a suitable font
+    u8x8.drawGlyph(0, 1, 67);                      // Draw glyph
+    u8x8.drawGlyph(1, 1, 64);                      // Draw glyph
+    u8x8.drawGlyph(0, 2, 65);                      // Draw glyph
+    u8x8.drawGlyph(1, 2, 66);                      // Draw glyph
+
+    u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
+    u8x8.setCursor(2, 1);
+    u8x8.print(dataOut.throttle);
+    u8x8.setCursor(2, 2);
+    u8x8.print(dataOut.yaw);
+
+    u8x8.drawString(7, 1, "1");
+    u8x8.setCursor(9, 1);
+    u8x8.print(dataOut.AUX1);
+
+    u8x8.drawString(7, 2, "2");
+    u8x8.setCursor(9, 2);
+    u8x8.print(dataOut.AUX2);
+
+    u8x8.drawString(11, 1, "3");
+    u8x8.setCursor(13, 1);
+    u8x8.print(dataOut.AUX3);
+    u8x8.drawString(11, 2, "4");
+    u8x8.setCursor(13, 2);
+    u8x8.print(dataOut.AUX4);
+
+    break;
+
+  default:
+    break;
+  }
+}
+
+void displayCursor()
+{
+  u8x8.setFont(u8x8_font_open_iconic_arrow_1x1); // choose a suitable font
+
+  switch (displayState)
+  {
+  case MAIN:
+    for (uint8_t i = 0; i < MAX_MAIN_OBJECTS; i++)
+    {
+      if (i != displaysCursorState)
+        u8x8.drawString(0, 1 + i, " "); // Draw glyph
+      else
+        u8x8.drawGlyph(0, 1 + i, 78); // Draw glyph
+    }
+    break;
+  case CORRECTIONS:
+
+    break;
+  case DEBUG:
+    break;
+
+  default:
+    break;
+  }
+}
+
+void checkCursorState()
+{
+  switch (displayState)
+  {
+  case MAIN:
+    if (prevButtonstate != readButtons())
+    {
+      switch (readButtons())
+      {
+      case BUTTON1:
+        displaysCursorState++;
+        if (displaysCursorState >= MAX_MAIN_OBJECTS)
+          displaysCursorState = 0;
+        break;
+      case BUTTON2:
+        if (displaysCursorState == 0)
+        {
+          displayState = MAIN;
+        }
+        if (displaysCursorState == 1)
+        {
+          displayState = CORRECTIONS;
+        }
+        if (displaysCursorState == 2)
+        {
+          displayState = DEBUG;
+        }
+        u8x8.clearLine(1);
+        u8x8.clearLine(2);
+        u8x8.clearLine(3);
+        break;
+      case BUTTON3:
+        displaysCursorState--;
+        if (displaysCursorState == 255)
+          displaysCursorState = MAX_MAIN_OBJECTS - 1;
+        break;
+      case BUTTON4:
+        /* code */
+        break;
+      case NONEBUTTON:
+        /* code */
+        break;
+      default:
+        break;
+      }
+    }
+    prevButtonstate = readButtons();
+    break;
+  case CORRECTIONS:
+    if (prevButtonstate != readButtons())
+    {
+      switch (readButtons())
+      {
+      case BUTTON1:
+        break;
+      case BUTTON2:
+        break;
+      case BUTTON4:
+        displayState = MAIN;
+        break;
+      case NONEBUTTON:
+        /* code */
+        break;
+      default:
+        break;
+      }
+    }
+    prevButtonstate = readButtons();
+    break;
+  case DEBUG:
+    /* code */
+    break;
+
+  default:
+    break;
+  }
 }
