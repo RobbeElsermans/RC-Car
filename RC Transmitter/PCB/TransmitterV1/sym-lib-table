@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name "RC_Trans")(type "KiCad")(uri "${KIPRJMOD}/RC_Trans.kicad_sym")(options "")(descr ""))
+  (lib (name "atmega")(type "Legacy")(uri "D:/Hobby/RC Transmitter/PCB/Lib/ATMEGA328P-AU/ATMEGA328P-AU.lib")(options "")(descr "")(disabled))
+  (lib (name "oled_128x32")(type "KiCad")(uri "/media/robbe/ELSERMANS1/Hobby/kicad/oled_breakout/oled_128x32.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name "RC_Transm")(type "KiCad")(uri "D:/Hobby/RC Transmitter/PCB/Lib")(options "")(descr ""))
+  (lib (name "SparkFun-Kicad-Libraries-master")(type "KiCad")(uri "D:/Hobby/RC Transmitter/PCB/Lib/SparkFun-Kicad-Libraries-master/SparkFun-Electromechanical.pretty")(options "")(descr ""))
+  (lib (name "ATMega328p-AU")(type "KiCad")(uri "D:/Hobby/RC Transmitter/PCB/Lib/ATMEGA328P-AU")(options "")(descr ""))
+)

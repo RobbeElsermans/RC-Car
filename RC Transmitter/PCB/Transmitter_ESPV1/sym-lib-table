@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "RC_Trans")(type "KiCad")(uri "${KIPRJMOD}/RC_Trans.kicad_sym")(options "")(descr ""))
+  (lib (name "atmega")(type "Legacy")(uri "D:/Hobby/RC Transmitter/PCB/Lib/ATMEGA328P-AU/ATMEGA328P-AU.lib")(options "")(descr ""))
+)

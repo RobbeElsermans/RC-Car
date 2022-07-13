@@ -1,0 +1,73 @@
+(footprint "JoyStick" (version 20211014) (generator pcbnew)
+  (layer "F.Cu")
+  (tedit 62988112)
+  (attr through_hole)
+  (fp_text reference "REF**" (at 1.03 -13.262 unlocked) (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp ae517775-bb62-452e-b7a8-10de99cf5a49)
+  )
+  (fp_text value "JoyStick" (at 1.03 -11.8904 unlocked) (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp 3094429a-5c6a-4eff-9ea7-03c42fa74155)
+  )
+  (fp_rect (start -13.956 -13.77) (end 16.016 11.122) (layer "F.SilkS") (width 0.12) (fill none) (tstamp 03d0832b-a352-40f6-bda5-ac86dd178987))
+  (fp_line (start 16.03 -13.824) (end -13.97 -13.824) (layer "Dwgs.User") (width 0.2) (tstamp 42894b7c-ed25-4b1c-bf60-d9f3f7107fd7))
+  (fp_line (start -13.97 -13.824) (end -13.97 11.176) (layer "Dwgs.User") (width 0.2) (tstamp 442c2218-ca1f-4d39-8de4-31d6fcf974dd))
+  (fp_line (start 16.03 11.176) (end 16.03 -13.824) (layer "Dwgs.User") (width 0.2) (tstamp 84d1cf48-ea19-4a3a-8d9e-1f64d4009a83))
+  (fp_line (start -13.97 11.176) (end 16.03 11.176) (layer "Dwgs.User") (width 0.2) (tstamp 976c35c0-4ab9-45c8-bf3e-17ffd47cafdf))
+  (fp_circle (center 8.13 3.376) (end 8.88 3.376) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 06f48c70-67ce-4ef7-acd0-a51d8a2e5727))
+  (fp_circle (center -7.47 7.826) (end -6.47 7.826) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 1d265377-bdbf-4248-8ad6-0bda11a2f774))
+  (fp_circle (center -0.02 -9.424) (end 0.73 -9.424) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 1ee8e1c4-1813-4ed6-9647-7ed72557b5fd))
+  (fp_circle (center -9.57 -2.424) (end -8.82 -2.424) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 261046f5-8dea-4dbe-bbc8-b5ca6e29690d))
+  (fp_circle (center -7.47 -7.574) (end -6.47 -7.574) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 3fce7b02-19fd-4184-b0f9-d5f4700186b3))
+  (fp_circle (center 7.38 -7.574) (end 8.38 -7.574) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 42f401a4-89ac-4b8e-bfd9-d725fc3c61f7))
+  (fp_circle (center -9.57 2.676) (end -8.82 2.676) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 4ce5af1d-79e0-4a16-aaca-1e8cb81a0a55))
+  (fp_circle (center -2.57 -9.424) (end -1.82 -9.424) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 50eb801a-f7e0-4621-8b2a-0938bab52619))
+  (fp_circle (center 7.38 7.826) (end 8.38 7.826) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 57f9dca1-d32a-4c65-a6d6-266efe14b783))
+  (fp_circle (center 12.43 -3.474) (end 13.18 -3.474) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 8296c016-760c-4c7a-a23c-e0872c7e087d))
+  (fp_circle (center 12.43 3.376) (end 13.18 3.376) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 8386e5e0-62a8-4602-a367-99b788e48596))
+  (fp_circle (center 2.53 -9.424) (end 3.28 -9.424) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 98a8a685-d89e-44e0-8f46-402238cbe6b5))
+  (fp_circle (center 8.13 -3.474) (end 8.88 -3.474) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp 99e08a88-25cf-48d0-92db-3a19aa9b7290))
+  (fp_circle (center -9.57 0.126) (end -8.82 0.126) (layer "Dwgs.User") (width 0.2) (fill none) (tstamp e727ef33-a01a-4a16-87ea-571f789ed093))
+  (pad "1" thru_hole circle (at 2.5032 -9.452) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 08d7883d-a132-4a3b-a8cc-9b24cb893d5c))
+  (pad "2" thru_hole circle (at -0.0368 -9.452) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 78e0ea42-eb11-4763-b3e9-8523ca0d0421))
+  (pad "3" thru_hole circle (at -2.5768 -9.452) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 7d4ef0c5-2ee2-4895-a145-4f41d506fff2))
+  (pad "4" thru_hole circle (at -9.5872 -2.4416) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 8d9c0b55-7712-4fea-8925-1323c501c1f6))
+  (pad "5" thru_hole circle (at -9.5872 0.0984) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 5b25ce7b-f0bf-439e-941d-2e8e2eafc972))
+  (pad "6" thru_hole circle (at -9.5872 2.6892) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 94287246-ba03-433b-b80f-b712c87a80e2))
+  (pad "7" thru_hole circle (at 8.0912 -3.5084) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 1f5e5ba6-d089-4041-b901-a8ece0c05497))
+  (pad "7" thru_hole circle (at 8.0912 3.3496) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 528d215f-b631-4ac9-809a-8a08684f3e3b))
+  (pad "8" thru_hole circle (at 12.4092 3.3496) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 36f84fa4-b650-46e8-8647-e82981678c60))
+  (pad "8" thru_hole circle (at 12.4092 -3.5084) (size 1.524 1.524) (drill 1) (layers *.Cu *.Mask) (tstamp 9665e7a4-58aa-4b0e-acc4-02acdf14f7fe))
+  (pad "9" thru_hole circle (at 7.40443 -7.574339) (size 3.2 3.2) (drill 2) (layers *.Cu *.Mask) (tstamp 2253ff9f-6615-4516-b9f8-d91ba07c1c85))
+  (pad "9" thru_hole circle (at 7.37806 7.846369) (size 3.2 3.2) (drill 2) (layers *.Cu *.Mask) (tstamp 5f122d76-4652-4755-9fa8-bac080b5bc70))
+  (pad "9" thru_hole circle (at -7.456176 7.814902) (size 3.2 3.2) (drill 2) (layers *.Cu *.Mask) (tstamp a31c418d-b58d-4c55-b9d2-ac67a88eb354))
+  (pad "9" thru_hole circle (at -7.4536 -7.5724) (size 3.2 3.2) (drill 2) (layers *.Cu *.Mask) (tstamp fb1cf958-86cb-40b2-8030-007fe64bdf6b))
+  (group "" (id 74f9f0f2-e076-4404-afc6-72cf00822153)
+    (members
+      06f48c70-67ce-4ef7-acd0-a51d8a2e5727
+      1d265377-bdbf-4248-8ad6-0bda11a2f774
+      1ee8e1c4-1813-4ed6-9647-7ed72557b5fd
+      261046f5-8dea-4dbe-bbc8-b5ca6e29690d
+      3fce7b02-19fd-4184-b0f9-d5f4700186b3
+      42894b7c-ed25-4b1c-bf60-d9f3f7107fd7
+      42f401a4-89ac-4b8e-bfd9-d725fc3c61f7
+      442c2218-ca1f-4d39-8de4-31d6fcf974dd
+      4ce5af1d-79e0-4a16-aaca-1e8cb81a0a55
+      50eb801a-f7e0-4621-8b2a-0938bab52619
+      57f9dca1-d32a-4c65-a6d6-266efe14b783
+      8296c016-760c-4c7a-a23c-e0872c7e087d
+      8386e5e0-62a8-4602-a367-99b788e48596
+      84d1cf48-ea19-4a3a-8d9e-1f64d4009a83
+      976c35c0-4ab9-45c8-bf3e-17ffd47cafdf
+      98a8a685-d89e-44e0-8f46-402238cbe6b5
+      99e08a88-25cf-48d0-92db-3a19aa9b7290
+      e727ef33-a01a-4a16-87ea-571f789ed093
+    )
+  )
+  (model "D:/Hobby/RC Transmitter/3D Design/Extra/Joystick.STEP"
+    (offset (xyz -9 6.5 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 90))
+  )
+)

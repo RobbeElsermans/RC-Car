@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "oled_128x32")(type "KiCad")(uri "/media/robbe/ELSERMANS1/Hobby/kicad/oled_breakout/oled_128x32.kicad_sym")(options "")(descr ""))
+)

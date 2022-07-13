@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name "KSWE")(type "KiCad")(uri "/media/robbe/ELSERMANS1/Hobby/kicad/oled_breakout/KSWE.pretty")(options "")(descr ""))
+  (lib (name "TackerSwitch")(type "KiCad")(uri "${KIPRJMOD}/TackerSwitch.pretty")(options "")(descr ""))
+  (lib (name "joystick")(type "KiCad")(uri "/media/robbe/ELSERMANS1/Hobby/RC Transmitter/PCB/Lib/joystick.pretty")(options "")(descr ""))
+)
