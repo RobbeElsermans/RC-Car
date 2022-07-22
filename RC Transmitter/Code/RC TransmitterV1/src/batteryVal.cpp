@@ -5,10 +5,10 @@
 const float divider = 0.25;
 
 //Bij 3.3V
-//const float vPerDiv = 0.003222656;
+const float vPerDiv = 0.003222656;
 
 //Bij 5V
-const float vPerDiv = 0.004887586;
+//const float vPerDiv = 0.004887586;
 
 void initBatteryVal(){
     pinMode(BATVAL, INPUT);

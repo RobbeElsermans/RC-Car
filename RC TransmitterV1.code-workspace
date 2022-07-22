@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"name": "RC TransmitterV1",
+			"path": "RC Transmitter/Code/RC TransmitterV1"
+		},
+		{
+			"name": "RC Receiver",
+			"path": "RC Reciever/Code/RC Receiver"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.py": "python",
+			"arduino.h": "c",
+			"joystick.h": "c"
+		}
+	}
+}

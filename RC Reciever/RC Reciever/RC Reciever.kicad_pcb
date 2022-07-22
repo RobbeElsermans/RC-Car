@@ -52,6 +52,8 @@
       (dielectric_constraints no)
     )
     (pad_to_mask_clearance 0)
+    (aux_axis_origin 87.63 182.88)
+    (grid_origin 87.63 182.88)
     (pcbplotparams
       (layerselection 0x00010fc_ffffffff)
       (disableapertmacros false)
@@ -2117,10 +2119,10 @@
       (net 13 "D12") (pinfunction "MISO") (pintype "output") (tstamp 2d6f75fd-6410-4440-8ba3-9164666cad62))
     (pad "8" thru_hole circle (at 2.54 -7.62 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 35 "D2") (pinfunction "IRQ") (pintype "output") (tstamp c72def11-c8cf-40e4-b3a4-aa756d8d0646))
-    (model "/media/robbe/ELSERMANS1/Hobby/RC Transmitter/3D Design/Extra/nrf24l01p-pa-lna-1.snapshot.3/NRF24L01L + Antenna 2.4 GHz/NRF24L01L+Antenna.STEP"
-      (offset (xyz -1.75 -3.75 2.5))
-      (scale (xyz 1 1 1))
-      (rotate (xyz -90 0 0))
+    (model "/home/robbe/Desktop/Github/RC-Car/RC Reciever/3D Designs/Extra/NRF24L01 WIFI Module v2.step"
+      (offset (xyz -2 3 1.5))
+      (scale (xyz 1.1 1.1 1))
+      (rotate (xyz 0 0 90))
     )
   )
 

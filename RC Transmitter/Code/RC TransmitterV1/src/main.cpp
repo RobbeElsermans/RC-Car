@@ -55,7 +55,7 @@ displayMenuState displayState = MAIN;
 buttonState prevButtonstate = NONEBUTTON;
 
 // U8G2_SH1106_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
-U8X8_SH1106_128X64_NONAME_SW_I2C u8x8(SCL, SDA);
+U8X8_SSD1306_128X32_UNIVISION_HW_I2C u8x8(4, SCL, SDA);
 
 dataReceive_t dataIn;
 dataSend_t dataOut;
@@ -64,6 +64,8 @@ uint8_t counterTotal = 0;
 uint8_t counter = 0;
 
 unsigned long displayTime = 0;
+
+bool ledFlipper = false;
 
 void setup()
 {
@@ -103,6 +105,8 @@ void setup()
   checkCursorState();
 }
 
+
+
 void loop()
 {
   // Serial.println(getThrottle());
@@ -122,7 +126,12 @@ void loop()
     checkCursorState();
     displayTime = millis();
 
-    Serial.println(displayState);
+    //Serial.println(displayState);
+    //Serial.println(analogRead(BUTTONS)); 
+
+    digitalWrite(LED1, ledFlipper);
+    digitalWrite(LED2, !ledFlipper);
+    ledFlipper = !ledFlipper;
   }
 
   if (counterTotal == 100)
@@ -130,12 +139,14 @@ void loop()
     counter = 0;
     counterTotal = 0;
   }
+
 }
 
 void send()
 {
   dataOut.AUX4 = 1;
   bool stat = writeRadio(dataOut);
+  //bool stat = true;
   if (stat)
   {
     counter++;
@@ -185,10 +196,10 @@ void displaySignal()
 void displayBatteryVoltage()
 {
   u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
-  u8x8.drawGlyph(11, 0, 73);                        // Draw glyph
+  u8x8.drawGlyph(10, 0, 73);                        // Draw glyph
 
   u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
-  u8x8.setCursor(12, 0);
+  u8x8.setCursor(11, 0);
   u8x8.print(getBatteryVal());
 }
 
@@ -275,7 +286,7 @@ void checkCursorState()
     {
       switch (readButtons())
       {
-      case BUTTON1:
+      case BUTTON3:
         displaysCursorState++;
         if (displaysCursorState >= MAX_MAIN_OBJECTS)
           displaysCursorState = 0;
@@ -297,7 +308,7 @@ void checkCursorState()
         u8x8.clearLine(2);
         u8x8.clearLine(3);
         break;
-      case BUTTON3:
+      case BUTTON1:
         displaysCursorState--;
         if (displaysCursorState == 255)
           displaysCursorState = MAX_MAIN_OBJECTS - 1;

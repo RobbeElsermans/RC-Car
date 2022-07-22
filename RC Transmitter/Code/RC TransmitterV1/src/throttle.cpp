@@ -24,22 +24,22 @@ throttleState readState()
 
     if (temp1 && !temp2)
     {
-        return FRONT;
+        return BACK;
     }
 
     if (temp2 && !temp1)
     {
-        return BACK;
+        return FRONT;
     }
 
     if (!temp1 && !temp2)
     {
-        return NONETHROTTLE;
+        return BRAKE;
     }
 
     if (temp1 && temp2)
     {
-        return BRAKE;
+        return NONETHROTTLE;
     }
 
     return NONETHROTTLE;
