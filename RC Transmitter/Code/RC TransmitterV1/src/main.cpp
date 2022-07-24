@@ -63,6 +63,8 @@ dataSend_t dataOut;
 uint8_t counterTotal = 0;
 uint8_t counter = 0;
 
+bool hasSendData = false;
+
 unsigned long displayTime = 0;
 
 bool ledFlipper = false;
@@ -92,8 +94,6 @@ void setup()
 
   dataIn = {
       0,
-      0,
-      0,
       0};
 
   displayTime = millis();
@@ -104,8 +104,6 @@ void setup()
   displayCursor();
   checkCursorState();
 }
-
-
 
 void loop()
 {
@@ -126,8 +124,8 @@ void loop()
     checkCursorState();
     displayTime = millis();
 
-    //Serial.println(displayState);
-    //Serial.println(analogRead(BUTTONS)); 
+    // Serial.println(displayState);
+    // Serial.println(analogRead(BUTTONS));
 
     digitalWrite(LED1, ledFlipper);
     digitalWrite(LED2, !ledFlipper);
@@ -140,13 +138,46 @@ void loop()
     counterTotal = 0;
   }
 
+  Serial.println(dataIn.batteryVal);
+  // Om de 3 seconden afgaan
+  if (((millis() / 1000) % 3) == 0 && !hasSendData)
+  {
+    // Serial.print("2 seconden");
+    // Serial.print("    ");
+    // Serial.println(millis()/1000);
+    
+    //Sturen naar ontvanger dat we data willen binnen krijgen
+    dataOut.AUX2 = 1;
+    send();
+    //Radio op luisteren zetten
+    radioSetReceive();
+
+    delay(5);
+    readRadio(&dataIn);
+
+    // do
+    // {
+    //   Serial.println("readData");
+    //   readRadio(&dataIn);
+    // } while (dataIn.batteryVal == 0);
+
+    delay(2);
+
+    radioSetSend();
+    dataOut.AUX2 = 0;
+    send();
+    hasSendData = true;
+  }
+  else if (((millis() / 1000) % 3) != 0){
+    hasSendData = false;
+  }
 }
 
 void send()
 {
   dataOut.AUX4 = 1;
   bool stat = writeRadio(dataOut);
-  //bool stat = true;
+  // bool stat = true;
   if (stat)
   {
     counter++;
@@ -212,6 +243,13 @@ void displayMenu()
     u8x8.drawGlyph(2, 1, 68);                         // Draw glyph
     u8x8.drawGlyph(2, 2, 66);                         // Draw glyph
     u8x8.drawGlyph(2, 3, 72);                         // Draw glyph
+
+    u8x8.setFont(u8x8_font_open_iconic_embedded_2x2); // choose a suitable font
+    u8x8.drawGlyph(5, 2, 73);                        // Draw glyph
+
+    u8x8.setFont(u8x8_font_7x14B_1x2_r); // choose a suitable font
+    u8x8.setCursor(7, 2);
+    u8x8.print(dataIn.batteryVal/100.0);
     break;
   case CORRECTIONS:
 
@@ -243,6 +281,13 @@ void displayMenu()
     u8x8.drawString(11, 2, "4");
     u8x8.setCursor(13, 2);
     u8x8.print(dataOut.AUX4);
+
+    u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
+    u8x8.drawGlyph(0, 3, 73);                        // Draw glyph
+
+    u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
+    u8x8.setCursor(2, 3);
+    u8x8.print(dataIn.batteryVal/100.0);
 
     break;
 
@@ -335,6 +380,9 @@ void checkCursorState()
       case BUTTON2:
         break;
       case BUTTON4:
+        u8x8.clearLine(1);
+        u8x8.clearLine(2);
+        u8x8.clearLine(3);
         displayState = MAIN;
         break;
       case NONEBUTTON:
@@ -347,7 +395,25 @@ void checkCursorState()
     prevButtonstate = readButtons();
     break;
   case DEBUG:
-    /* code */
+        if (prevButtonstate != readButtons())
+    {
+      switch (readButtons())
+      {
+      case BUTTON1:
+        break;
+      case BUTTON2:
+        break;
+      case BUTTON4:
+        displayState = MAIN;
+        break;
+      case NONEBUTTON:
+        /* code */
+        break;
+      default:
+        break;
+      }
+    }
+    prevButtonstate = readButtons();
     break;
 
   default:

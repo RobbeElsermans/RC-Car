@@ -5,6 +5,7 @@
 #include "motorDriver.h"
 #include "Servo.h"
 #include "EasyBuzzer.h"
+#include "batteryVal.h"
 
 Servo steer;
 
@@ -13,9 +14,23 @@ dataSend_t dataIn;
 
 motorDriver motor(EN, L_PWM, R_PWM);
 
-int errorCounter = 0;
+unsigned long errorCounter = 0;
+
+unsigned long globalCounter = 0;
+
+bool hasSendData = false;
+
+unsigned long beepTimer = 0;
+#define beepTime 2000
+bool batteryLow = false;
+bool beepSet = false;
 
 void pinSetup();
+void batteryCheck();
+void connectionCheck();
+void disableVehicleIfNeeded();
+void setActuator();
+void sendBatteryVoltage();
 
 void setup()
 {
@@ -39,7 +54,55 @@ void setup()
 void loop()
 {
   delay(1);
+  batteryCheck();
+  connectionCheck();
+  disableVehicleIfNeeded();
+  setActuator();
+  sendBatteryVoltage();
+}
+
+void pinSetup()
+{
+  pinMode(BATVAL, INPUT);
+  pinMode(BUTTONS, INPUT);
+  pinMode(NRF_INT, INPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+}
+
+void batteryCheck(){
+  if (getBatteryVal() <= 11.4 && !batteryLow)
+  {
+    // Beep om de seconden
+    batteryLow = true;
+    beepTimer = millis();
+    motor.disable();
+  }
+  else if (getBatteryVal() > 11.6)
+  {
+    batteryLow = false;
+    motor.enable();
+  }
+
+  if (batteryLow && (millis() - beepTimer) > beepTime)
+  {
+    beepTimer = millis();
+    if (beepSet)
+    {
+      // Beep
+      beepSet = false;
+    }
+    else
+    {
+      // geen Beep
+      beepSet = true;
+    }
+  }
+}
+
+void connectionCheck(){
   dataIn.AUX4 = 0;
+  dataIn.AUX2 = 0;
   readRadio(&dataIn);
   Serial.println(errorCounter);
   if (dataIn.AUX4 == 0)
@@ -50,31 +113,22 @@ void loop()
   {
     errorCounter = 0;
   }
+}
 
-  if (errorCounter >= 300)
+void disableVehicleIfNeeded(){
+  if (errorCounter >= 500)
   {
-    motor.stop();
+    motor.disable();
     steer.detach();
-    while (1)
-    {
-      delay(1000);
-      digitalWrite(LED1, HIGH);
-      delay(1000);
-      digitalWrite(LED1, LOW);
-      delay(1000);
-      digitalWrite(LED2, HIGH);
-      delay(1000);
-      digitalWrite(LED2, LOW);
-    }
+    dataIn.throttle = 1500;
   }
+  else{
+    if(!steer.attached())
+      steer.attach(STEER);
+  }
+}
 
-  Serial.println(dataIn.throttle);
-
-  // if(dataIn.throttle > 1500)
-  //   digitalWrite(LED1, HIGH);
-  // else
-  //   digitalWrite(LED1, LOW);
-
+void setActuator(){
   if (dataIn.throttle < 1520 && dataIn.throttle > 1480)
   {
     motor.disable();
@@ -104,11 +158,25 @@ void loop()
   steer.write(map(dataIn.yaw, 1000, 2000, 0, 180));
 }
 
-void pinSetup()
-{
-  pinMode(BATVAL, INPUT);
-  pinMode(BUTTONS, INPUT);
-  pinMode(NRF_INT, INPUT);
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
+void sendBatteryVoltage(){
+  if(dataIn.AUX2 == 1)
+ {
+    Serial.println("aux2");
+    dataOut.batteryVal = getBatteryVal()*100;
+    dataOut.batteryLow = batteryLow;
+
+    radioSetSend();
+    for (uint8_t i = 0; i < 6; i++)
+    {
+      writeRadio(dataOut);
+    }
+    
+    // bool temp = false;
+    // do
+    // {
+    //   temp = writeRadio(dataOut);
+    // } while (temp == false);
+
+    radioSetReceive();
+ }
 }

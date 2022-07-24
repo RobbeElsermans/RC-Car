@@ -18,10 +18,8 @@ typedef struct
 // Data structure van RECEIVER --> TRANSMITTER
 typedef struct
 {
-  bool AUX1;
-  bool AUX2;
-  bool AUX3;
-  uint8_t AUX4;
+  bool batteryLow;
+  int batteryVal;
 } dataReceive_t;
 
 #endif
