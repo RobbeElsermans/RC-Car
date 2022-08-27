@@ -52,6 +52,8 @@
       (dielectric_constraints no)
     )
     (pad_to_mask_clearance 0)
+    (aux_axis_origin 125.222 136.144)
+    (grid_origin 125.222 136.144)
     (pcbplotparams
       (layerselection 0x00010fc_ffffffff)
       (disableapertmacros false)
@@ -346,7 +348,7 @@
       (net 7 "Net-(C12-Pad2)") (pinfunction "VCOMH") (pintype "input") (tstamp 9314f66f-9cb3-4701-95cf-6f97e5a7bbd6))
     (pad "14" smd roundrect (at 1.27 -8.255 180) (size 0.32 3) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 8 "Net-(C13-Pad2)") (pinfunction "VCC") (pintype "input") (tstamp 510ad5a9-d0f6-46ea-ba6e-c06ceeb19e65))
-    (model "/media/robbe/ELSERMANS1/Hobby/RC Transmitter/3D Design/Extra/0.91in OLED - Folded - Without Glass.stp"
+    (model "/home/robbe/Documents/Github/RC-Car/RC Transmitter/3D Design/Extra/0.91in OLED - Folded - Without Glass.stp"
       (offset (xyz -17 6.2 1.7))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -746,7 +748,7 @@
         e0f939d9-8741-44e0-8f8f-63d01636f0ec
       )
     )
-    (model "/media/robbe/ELSERMANS1/Hobby/RC Transmitter/3D Design/Extra/Joystick.STEP"
+    (model "/home/robbe/Documents/Github/RC-Car/RC Transmitter/3D Design/Extra/Joystick.STEP"
       (offset (xyz -8 8 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 90))
@@ -1078,10 +1080,10 @@
       (net 55 "D12") (pinfunction "MISO") (pintype "output") (tstamp 798e31c8-267c-4e56-92c5-568b5b4452fa))
     (pad "8" thru_hole circle (at 2.54 7.62 270) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
       (net 60 "D2") (pinfunction "IRQ") (pintype "output") (tstamp 3e2d7927-eb1d-4a22-babf-e751641cda16))
-    (model "${KICAD6_3DMODEL_DIR}/RF_Module.3dshapes/nRF24L01_Breakout.wrl"
-      (offset (xyz 0 0 0))
+    (model "/home/robbe/Documents/Github/RC-Car/RC Transmitter/3D Design/Extra/nrf24l01p-pa-lna-1.snapshot.3/NRF24L01L + Antenna 2.4 GHz/NRF24L01L+Antenna.STEP"
+      (offset (xyz -1.75 -3.75 2))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
+      (rotate (xyz -90 0 0))
     )
   )
 
@@ -4086,6 +4088,7 @@
     (format (units 3) (units_format 1) (precision 4))
     (style (thickness 0.15) (arrow_length 1.27) (text_position_mode 0) (extension_height 0.58642) (extension_offset 0.5) keep_text_aligned)
   )
+  (target plus (at 125.222 136.144) (size 5) (width 0.1) (layer "Edge.Cuts") (tstamp 3a156362-7e6d-49ac-be3e-56bd24568413))
 
   (segment (start 132.212 77.79) (end 132.908 78.486) (width 1) (layer "F.Cu") (net 1) (tstamp 0145720e-6826-4a71-8643-3884788730d0))
   (segment (start 152.576 65.248) (end 152.243 65.248) (width 0.5) (layer "F.Cu") (net 1) (tstamp 06f40f5d-b34b-40f9-a867-4f147df6dd20))
