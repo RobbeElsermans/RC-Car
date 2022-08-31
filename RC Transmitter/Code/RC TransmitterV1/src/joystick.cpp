@@ -13,12 +13,30 @@ void initJoy()
 int readValX()
 {
     int temp = readRawValX();
-    return map(temp, 0, 1024, yawMinOffset, yawMaxOffset) + yawCenterOffset;
+    int temp2 = map(temp, 0, 1023, yawMinOffset + yawCenterOffset, yawMaxOffset + yawCenterOffset);
+    // if (temp2 > 0) // Positief
+    // {
+    //     if (temp2 <= yawMinOffset + yawCenterOffset || temp2 <= yawMinOffset)
+    //         temp2 = yawMinOffset;
+
+    //     if (temp2 >= yawMaxOffset - yawCenterOffset || temp2 >= yawMaxOffset)
+    //         temp2 = yawMaxOffset;
+    // }
+    // if (temp2 < 0) // Negatief
+    // {
+    //     if (temp2 <= yawMinOffset - yawCenterOffset || temp2 <= yawMinOffset)
+    //         temp2 = yawMinOffset;
+
+    //     if (temp2 >= yawMaxOffset + yawCenterOffset || temp2 >= yawMaxOffset)
+    //         temp2 = yawMaxOffset;
+    // }
+
+    return temp2;
 }
 int readValY()
 {
     int temp = readRawValY();
-    return map(temp, 0, 1024, 1000, 2000);
+    return map(temp, 0, 1023, throttleMinOffset, throttleMaxOffset);
 }
 
 int readRawValX()

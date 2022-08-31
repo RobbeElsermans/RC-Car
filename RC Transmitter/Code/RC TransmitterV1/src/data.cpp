@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include "throttle.h"
 #include "joystick.h"
+#include "offset.h"
 
 int offsetYaw = -35;
 

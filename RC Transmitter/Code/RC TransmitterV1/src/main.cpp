@@ -24,6 +24,8 @@
 #include "joystick.h"
 #include "buttons.h"
 #include "batteryVal.h"
+#include "offset.h"
+#include "EEPROM.h"
 
 /**
  * @brief Used private functions
@@ -39,8 +41,19 @@ void displayBatteryVoltage();
 void displayMenu();
 void displayCursor();
 void checkCursorState();
+void writeEeprom();
+void readEeprom();
 
 uint8_t displaysCursorState = 0;
+
+int throttleCenterOffset = 0;
+int throttleMinOffset = 1000;
+int throttleMaxOffset = 2000;
+int yawCenterOffset = -50;
+int yawMinOffset = 1200;
+int yawMaxOffset = 1800;
+
+
 
 typedef enum
 {
@@ -52,6 +65,7 @@ typedef enum
 displayMenuState displayState = MAIN;
 
 #define MAX_MAIN_OBJECTS 3
+#define MAX_CORRECTIONS_OBJECTS 3
 buttonState prevButtonstate = NONEBUTTON;
 
 // U8G2_SH1106_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
@@ -71,6 +85,7 @@ bool ledFlipper = false;
 
 void setup()
 {
+  readEeprom();
   Wire.setClock(400000);
   pinSetup();
 
@@ -81,7 +96,7 @@ void setup()
   u8x8.setBusClock(400000);
 
   // Init serial output (debugging)
-  Serial.begin(115200);
+  Serial.begin(9600);
   // Serial.print("Robbe is cool met zijn RC Transmitter");
 
   dataOut = {
@@ -99,10 +114,11 @@ void setup()
   displayTime = millis();
 
   displaySignal();
-  displayBatteryVoltage();
+  // displayBatteryVoltage();
   displayMenu();
   displayCursor();
   checkCursorState();
+  //writeEeprom();
 }
 
 void loop()
@@ -118,7 +134,7 @@ void loop()
   if (millis() - displayTime > 200 && counterTotal == 100)
   {
     displaySignal();
-    displayBatteryVoltage();
+    // displayBatteryVoltage();
     displayMenu();
     displayCursor();
     checkCursorState();
@@ -126,6 +142,9 @@ void loop()
 
     // Serial.println(displayState);
     // Serial.println(analogRead(BUTTONS));
+    // Serial.print(dataOut.yaw);
+    // Serial.print("   ");
+    // Serial.println(dataOut.throttle);
 
     digitalWrite(LED1, ledFlipper);
     digitalWrite(LED2, !ledFlipper);
@@ -138,18 +157,18 @@ void loop()
     counterTotal = 0;
   }
 
-  Serial.println(dataIn.batteryVal);
-  // Om de 3 seconden afgaan
+  // Serial.println(dataIn.batteryVal);
+  //  Om de 3 seconden afgaan
   if (((millis() / 1000) % 3) == 0 && !hasSendData)
   {
     // Serial.print("2 seconden");
     // Serial.print("    ");
     // Serial.println(millis()/1000);
-    
-    //Sturen naar ontvanger dat we data willen binnen krijgen
+
+    // Sturen naar ontvanger dat we data willen binnen krijgen
     dataOut.AUX2 = 1;
     send();
-    //Radio op luisteren zetten
+    // Radio op luisteren zetten
     radioSetReceive();
 
     delay(5);
@@ -168,7 +187,8 @@ void loop()
     send();
     hasSendData = true;
   }
-  else if (((millis() / 1000) % 3) != 0){
+  else if (((millis() / 1000) % 3) != 0)
+  {
     hasSendData = false;
   }
 }
@@ -189,13 +209,15 @@ void collectData()
 {
   if (getThrottle() != 1500)
   {
-    dataOut.throttle = getThrottle();
+    //dataOut.throttle = getThrottle();
+    dataOut.throttle = getThrottleJoy();
   }
   else
   {
     dataOut.throttle = getThrottleJoy();
   }
 
+  
   dataOut.yaw = getYawJoy();
 }
 
@@ -245,13 +267,29 @@ void displayMenu()
     u8x8.drawGlyph(2, 3, 72);                         // Draw glyph
 
     u8x8.setFont(u8x8_font_open_iconic_embedded_2x2); // choose a suitable font
-    u8x8.drawGlyph(5, 2, 73);                        // Draw glyph
+    u8x8.drawGlyph(5, 2, 73);                         // Draw glyph
 
     u8x8.setFont(u8x8_font_7x14B_1x2_r); // choose a suitable font
     u8x8.setCursor(7, 2);
-    u8x8.print(dataIn.batteryVal/100.0);
+    u8x8.print(dataIn.batteryVal / 100.0);
     break;
   case CORRECTIONS:
+    u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
+    u8x8.setCursor(2, 1);
+    u8x8.print("steer ");
+    u8x8.print(yawCenterOffset);
+    u8x8.print(" ");
+    //Value of steer Offset
+    u8x8.setCursor(2, 2);
+    u8x8.print("speed F ");
+    u8x8.print(throttleMaxOffset);
+    u8x8.print(" ");
+    //Value of speed Forward Max
+    u8x8.setCursor(2, 3);
+    u8x8.print("speed R ");
+    u8x8.print(throttleMinOffset);
+    u8x8.print(" ");
+    //Value of speed Reverse Max
 
     break;
   case DEBUG:
@@ -283,11 +321,11 @@ void displayMenu()
     u8x8.print(dataOut.AUX4);
 
     u8x8.setFont(u8x8_font_open_iconic_embedded_1x1); // choose a suitable font
-    u8x8.drawGlyph(0, 3, 73);                        // Draw glyph
+    u8x8.drawGlyph(0, 3, 73);                         // Draw glyph
 
     u8x8.setFont(u8x8_font_chroma48medium8_r); // choose a suitable font
     u8x8.setCursor(2, 3);
-    u8x8.print(dataIn.batteryVal/100.0);
+    u8x8.print(dataIn.batteryVal / 100.0);
 
     break;
 
@@ -312,7 +350,13 @@ void displayCursor()
     }
     break;
   case CORRECTIONS:
-
+    for (uint8_t i = 0; i < MAX_MAIN_OBJECTS; i++)
+    {
+      if (i != displaysCursorState)
+        u8x8.drawString(0, 1 + i, " "); // Draw glyph
+      else
+        u8x8.drawGlyph(0, 1 + i, 78); // Draw glyph
+    }
     break;
   case DEBUG:
     break;
@@ -340,14 +384,17 @@ void checkCursorState()
         if (displaysCursorState == 0)
         {
           displayState = MAIN;
+          displaysCursorState = 0;
         }
         if (displaysCursorState == 1)
         {
           displayState = CORRECTIONS;
+          displaysCursorState = 0;
         }
         if (displaysCursorState == 2)
         {
           displayState = DEBUG;
+          displaysCursorState = 0;
         }
         u8x8.clearLine(1);
         u8x8.clearLine(2);
@@ -359,7 +406,7 @@ void checkCursorState()
           displaysCursorState = MAX_MAIN_OBJECTS - 1;
         break;
       case BUTTON4:
-        /* code */
+
         break;
       case NONEBUTTON:
         /* code */
@@ -370,7 +417,64 @@ void checkCursorState()
     }
     prevButtonstate = readButtons();
     break;
-  case CORRECTIONS:
+  case CORRECTIONS: //kan enkel naar onder gaan door op de rechtste knop te drukken. De value kunnen we aanpassen door boven en onder knop te gebruiken
+    if (prevButtonstate != readButtons())
+    {
+      switch (readButtons())
+      {
+      case BUTTON1: // BOVEN
+        //De waarde laten stijgen
+        if(displaysCursorState == 0){
+          //Steering
+          yawCenterOffset++;
+        }
+        if(displaysCursorState == 1){
+          //FMaxThrottle
+          throttleMaxOffset+=5;
+        }
+        if(displaysCursorState == 2){
+          //RMaxThrottle
+          throttleMinOffset+=5;
+        }
+        break;
+      case BUTTON2: // RECHTS
+      displaysCursorState++;
+        if (displaysCursorState >= MAX_CORRECTIONS_OBJECTS)
+          displaysCursorState = 0;
+        break;
+      case BUTTON3: // ONDER
+        //De waarde laten dalen
+        if(displaysCursorState == 0){
+          //Steering
+          yawCenterOffset--;
+        }
+        if(displaysCursorState == 1){
+          //FMaxThrottle
+          throttleMaxOffset-=5;
+        }
+        if(displaysCursorState == 2){
+          //RMaxThrottle
+          throttleMinOffset-=5;
+        }
+        break;
+      case BUTTON4: // LINKS
+        u8x8.clearLine(1);
+        u8x8.clearLine(2);
+        u8x8.clearLine(3);
+        writeEeprom();
+        displayState = MAIN;
+        displaysCursorState = 0;
+        break;
+      case NONEBUTTON:
+        /* code */
+        break;
+      default:
+        break;
+      }
+    }
+    prevButtonstate = readButtons();
+    break;
+  case DEBUG:
     if (prevButtonstate != readButtons())
     {
       switch (readButtons())
@@ -384,27 +488,7 @@ void checkCursorState()
         u8x8.clearLine(2);
         u8x8.clearLine(3);
         displayState = MAIN;
-        break;
-      case NONEBUTTON:
-        /* code */
-        break;
-      default:
-        break;
-      }
-    }
-    prevButtonstate = readButtons();
-    break;
-  case DEBUG:
-        if (prevButtonstate != readButtons())
-    {
-      switch (readButtons())
-      {
-      case BUTTON1:
-        break;
-      case BUTTON2:
-        break;
-      case BUTTON4:
-        displayState = MAIN;
+        displaysCursorState = 0;
         break;
       case NONEBUTTON:
         /* code */
@@ -419,4 +503,15 @@ void checkCursorState()
   default:
     break;
   }
+}
+
+void writeEeprom(){
+  eeprom_update_float((float *)0, yawCenterOffset);
+  eeprom_update_float((float *)4, throttleMinOffset);
+  eeprom_update_float((float *)8, throttleMaxOffset);
+}
+void readEeprom(){
+  yawCenterOffset = eeprom_read_float((float *)0);
+  throttleMinOffset = eeprom_read_float((float *)4);
+  throttleMaxOffset = eeprom_read_float((float *)8);
 }

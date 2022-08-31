@@ -6,10 +6,10 @@
 
 typedef enum{
     NONEBUTTON,
-    BUTTON1,
-    BUTTON2,
-    BUTTON3,
-    BUTTON4,
+    BUTTON1,    //BOVEN
+    BUTTON2,    //RECHTS
+    BUTTON3,    //ONDER
+    BUTTON4,    //LINKS
 } buttonState;
 
 void initButtons();

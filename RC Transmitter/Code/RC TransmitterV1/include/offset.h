@@ -1,12 +1,12 @@
 #ifndef OFFSET_H
 #define OFFSET_H
 
-int throttleCenterOffset = 0;
-int throttleMinOffset = 1000;
-int throttleMaxOffset = 2000;
+extern int throttleCenterOffset;
+extern int throttleMinOffset;
+extern int throttleMaxOffset;
 
-int yawCenterOffset = -50;
-int yawMinOffset = 1200;
-int yawMaxOffset = 1800;
+extern int yawCenterOffset;
+extern int yawMinOffset;
+extern int yawMaxOffset;
 
 #endif
